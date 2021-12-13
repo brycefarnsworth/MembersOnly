@@ -1,0 +1,55 @@
+extends layout
+
+block content
+  h1= title
+  if currentUser
+    p Welcome back, #{currentUser.full_name}! 
+      a(href='/log-out') Log out.
+    if !currentUser.is_member
+      p You are not a member. Do you know the password? 
+        a(href='/become-member') Become a member.
+
+  else
+    p Welcome, Guest!
+    p You are not signed in. 
+      a(href='/log-in') Log in 
+      | or 
+      a(href='/sign-up') Sign up
+      | .
+
+  each message in messages
+    table(style='width:100%; border:1px solid black; border-collapse:collapse;')
+      tr
+        th(style='width:80%; text-align: left;') #{message.title}
+        td(style='text-align: right;')
+          if currentUser
+            if currentUser.is_admin
+              a(href='/delete/'+message._id) Delete
+      tr
+        td(colspan='2' style='border:1px solid black; border-collapse:collapse;') #{message.text}
+      tr
+        if currentUser
+          currentUser.is_member
+            td(style='width:50%;') #{message.user.username}
+        else
+          td(style='width:50%;') Anonymous
+        td(style='text-align: right;') #{message.timestamp}
+    br
+
+  if currentUser
+    h4 Make New Post:
+
+    form(method='POST', action='')
+      div.form-group
+        input#title.form-control(type='text', name='title', placeholder='Post Title', required='true', value=(undefined===new_message ? '' : new_message.title))
+      div.form-group
+        textarea#msg_text.form-control(type='textarea', placeholder='Message Body' name='msg_text' required='true') #{undefined===new_message ? '' : new_message.msg_text}
+      button.btn.btn-primary(type='submit') Post
+  
+  else
+    p You must be logged in to post a new message.
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg

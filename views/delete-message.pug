@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1 #{title}
+  
+  table(style='width:100%; border:1px solid black; border-collapse:collapse;')
+    tr
+      th(colspan='2' style='width:80%; text-align: left;') #{message.title}
+    tr
+      td(colspan='2' style='border:1px solid black; border-collapse:collapse;') #{message.text}
+    tr
+      td(style='width:50%;') #{message.user.username}
+      td(style='text-align: right;') #{message.timestamp}
+  
+  p Do you really want to delete this message?
+
+  form(method='POST', action='')
+    div.form-group
+      input#bookid.form-control(type='hidden', name='messageid', required='true', value=message._id)
+
+      button.btn.btn-primary(type='submit') Delete
